@@ -1,4 +1,5 @@
-import { Num, OpenAPIRoute, Str } from "chanfana";
+import { env } from "cloudflare:workers";
+import { OpenAPIRoute, Str } from "chanfana";
 import { z } from "zod";
 
 import {
@@ -7,21 +8,16 @@ import {
   PaginationSchema,
   type AppContext,
 } from "@/common/types";
-import { env } from "cloudflare:workers";
 
 export class ProductList extends OpenAPIRoute {
   schema = {
     tags: ["products"],
     summary: "List products",
     request: {
-      query: z
-        .object({
-          apikey: Str({
-            description: "API key",
-            required: true,
-          }),
-        })
-        .merge(PaginationSchema.partial()),
+      query: PaginationSchema.partial(),
+      headers: z.object({
+        "X-API-Key": z.string().describe("API Key for authentication"),
+      }),
     },
     responses: {
       "200": {
@@ -39,8 +35,7 @@ export class ProductList extends OpenAPIRoute {
             schema: z.object({
               message: Str({
                 description: "Error message",
-                example:
-                  "Invalid API Key!",
+                example: "Invalid API Key!",
               }),
             }),
           },

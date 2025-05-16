@@ -5,10 +5,10 @@ import { ProductList } from "@/endpoints/products/productList";
 import { UnauthorizedError } from "@/common/errors";
 import { env } from "cloudflare:workers";
 
-const app = new Hono()
+const app = new Hono();
 
 app.use(async (c, next) => {
-  const { apikey } = c.req.query();
+  const apikey = c.req.header("X-API-Key");
   const url = new URL(c.req.url);
   const baseUrl = `${url.protocol}//${url.host}`;
 
