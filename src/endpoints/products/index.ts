@@ -14,7 +14,7 @@ app.use(async (c, next) => {
 
   if (!apikey)
     throw new UnauthorizedError(`Missing API Key! Check the docs: ${baseUrl}`);
-  if (apikey !== env.SECRET_KET)
+  if (apikey !== env.SECRET_KEY)
     throw new UnauthorizedError("Invalid API Key!");
   await next();
 });
